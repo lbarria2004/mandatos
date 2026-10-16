@@ -22,6 +22,8 @@ const CONTENT_WIDTH_DXA = 9026; // A4 width minus 1 inch margins on both sides
 export async function exportToDocx(markdown: string, clientName: string, type: 'informe' | 'contrato' = 'informe', advisorName?: string) {
   const lines = markdown.split(/\r?\n/);
   const children: any[] = [];
+  const fontName = type === 'contrato' ? "Roboto Medium" : "Arial";
+  const lineSpacing = 276; // 1.15 line spacing (interlineado <= 2)
 
   // Title
   const title = type === 'informe' ? "INFORME TÉCNICO DE ASESORÍA PREVISIONAL" : "CONTRATO DE PRESTACIÓN DE SERVICIOS DE ASESORÍA PREVISIONAL";
@@ -31,25 +33,44 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
       text: title, 
       bold: true, 
       size: 32,
-      font: "Arial"
+      font: fontName
     })],
     alignment: AlignmentType.CENTER,
-    spacing: { before: 200, after: 200 }
+    spacing: { before: 120, after: 160, line: lineSpacing }
   }));
 
   if (type === 'informe') {
     children.push(new Paragraph({
       children: [
-        new TextRun({ text: "CLIENTE: ", bold: true, size: 22, font: "Arial" }),
-        new TextRun({ text: (clientName || "Sin Nombre").toUpperCase(), size: 22, font: "Arial" })
+        new TextRun({ text: "CLIENTE: ", bold: true, size: 22, font: fontName }),
+        new TextRun({ text: (clientName || "Sin Nombre").toUpperCase(), size: 22, font: fontName })
       ],
       alignment: AlignmentType.CENTER,
-      spacing: { after: 400 }
+      spacing: { after: 400, line: lineSpacing }
     }));
   }
 
   let currentTable: string[][] = [];
   let inTable = false;
+
+  const createCellRuns = (cellText: string, defaultBold: boolean, fontSize: number) => {
+    const trimmed = cellText.trim();
+    if (trimmed.includes("**")) {
+      const parts = trimmed.split("**");
+      return parts.map((part, index) => new TextRun({
+        text: part.replace(/\*/g, ""),
+        bold: defaultBold || (index % 2 !== 0),
+        size: fontSize,
+        font: fontName
+      }));
+    }
+    return [new TextRun({
+      text: trimmed.replace(/\*/g, ""),
+      bold: defaultBold,
+      size: fontSize,
+      font: fontName
+    })];
+  };
 
   const flushTable = () => {
     if (currentTable.length > 0) {
@@ -69,7 +90,7 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
           row.some(cell => cell.includes("ASESOR PREVISIONAL") || cell.includes("CONSULTANTE"))
         );
 
-        // Detect if it's a beneficiary table (transparent, size 9, no bold)
+        // Detect if it's a beneficiary table (transparent, size 9, data rows bold)
         const isBeneficiaryTable = type === 'contrato' && 
           validRows[0].some(cell => cell.includes("Nombre")) && 
           validRows[0].some(cell => cell.includes("Parentesco"));
@@ -110,17 +131,17 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
             return new TableRow({
               children: cells.map((cell, cellIndex) => {
                 const isHeader = !isTransparentTable && rowIndex === 0;
+                const cellBold = isBeneficiaryTable
+                  ? rowIndex > 0
+                  : (isHeader || (isSignatureTable && (rowIndex === 0 || rowIndex === 1)));
+                const cellFontSize = isBeneficiaryTable ? 18 : 22;
+
                 return new TableCell({
                   width: { size: columnWidths[cellIndex], type: WidthType.DXA },
                   children: [new Paragraph({
-                    children: [new TextRun({ 
-                      text: cell.trim().replace(/[\*_]/g, ""), 
-                      bold: isBeneficiaryTable ? false : (isHeader || (isSignatureTable && rowIndex === 0)),
-                      size: isBeneficiaryTable ? 18 : 22,
-                      font: "Arial"
-                    })],
+                    children: createCellRuns(cell, cellBold, cellFontSize),
                     alignment: (isHeader || isSignatureTable) ? AlignmentType.CENTER : AlignmentType.LEFT,
-                    spacing: { before: 100, after: 100 }
+                    spacing: { before: 40, after: 40, line: lineSpacing }
                   })],
                   shading: isHeader ? { 
                     fill: "F2F2F2",
@@ -140,7 +161,7 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
           })
         });
         children.push(table);
-        children.push(new Paragraph({ text: "", spacing: { after: 200 } }));
+        children.push(new Paragraph({ text: "", spacing: { after: 120, line: lineSpacing } }));
       }
       currentTable = [];
     }
@@ -174,30 +195,30 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
 
     if (line.startsWith("## ")) {
       children.push(new Paragraph({
-        text: line.replace("## ", "").replace(/[\*_]/g, ""),
+        text: line.replace("## ", "").replace(/\*/g, ""),
         heading: HeadingLevel.HEADING_2,
-        spacing: { before: 400, after: 200 }
+        spacing: { before: 240, after: 120, line: lineSpacing }
       }));
     } else if (line.startsWith("### ")) {
       children.push(new Paragraph({
-        text: line.replace("### ", "").replace(/[\*_]/g, ""),
+        text: line.replace("### ", "").replace(/\*/g, ""),
         heading: HeadingLevel.HEADING_3,
-        spacing: { before: 300, after: 150 }
+        spacing: { before: 200, after: 100, line: lineSpacing }
       }));
     } else if (line.startsWith("#### ")) {
       children.push(new Paragraph({
-        text: line.replace("#### ", "").replace(/[\*_]/g, ""),
+        text: line.replace("#### ", "").replace(/\*/g, ""),
         heading: HeadingLevel.HEADING_4,
-        spacing: { before: 200, after: 100 }
+        spacing: { before: 160, after: 80, line: lineSpacing }
       }));
     } else if (line.match(/^[\*\-]\s+/)) {
       const cleanLine = line.replace(/^[\*\-]\s+/, "");
       const parts = cleanLine.split("**");
       const textRuns = parts.map((part, index) => new TextRun({
-        text: part.replace(/[\*_]/g, ""),
+        text: part.replace(/\*/g, ""),
         bold: index % 2 !== 0,
         size: 22,
-        font: "Arial"
+        font: fontName
       }));
 
       children.push(new Paragraph({
@@ -206,20 +227,20 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
           reference: "my-bullet-points",
           level: 0,
         },
-        spacing: { after: 120 }
+        spacing: { after: 80, line: lineSpacing }
       }));
     } else if (line !== "" && !line.startsWith("---")) {
       const parts = line.split("**");
       const textRuns = parts.map((part, index) => new TextRun({
-        text: part.replace(/[\*_]/g, ""),
+        text: part.replace(/\*/g, ""),
         bold: index % 2 !== 0,
         size: 22,
-        font: "Arial"
+        font: fontName
       }));
 
       children.push(new Paragraph({
         children: textRuns,
-        spacing: { after: 200 },
+        spacing: { after: 120, line: lineSpacing },
         alignment: AlignmentType.JUSTIFIED
       }));
     }
@@ -232,21 +253,21 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
     
     children.push(new Paragraph({ text: "", spacing: { before: 1200 } }));
     children.push(new Paragraph({
-      children: [new TextRun({ text: isKarin ? "KARIN PABLINA OROSTICA SANTELICES" : "LUIS MAURICIO BARRÍA CHODIL", bold: true, size: 22, font: "Arial" })],
+      children: [new TextRun({ text: isKarin ? "KARIN PABLINA OROSTICA SANTELICES" : "LUIS MAURICIO BARRÍA CHODIL", bold: true, size: 22, font: fontName })],
       alignment: AlignmentType.CENTER,
     }));
     children.push(new Paragraph({
-      children: [new TextRun({ text: isKarin ? "15.126.775-0" : "9.319.028-9", bold: true, size: 22, font: "Arial" })],
+      children: [new TextRun({ text: isKarin ? "15.126.775-0" : "9.319.028-9", bold: true, size: 22, font: fontName })],
       alignment: AlignmentType.CENTER,
     }));
     children.push(new Paragraph({
-      children: [new TextRun({ text: "ASESOR PREVISIONAL", size: 20, font: "Arial" })],
+      children: [new TextRun({ text: "ASESOR PREVISIONAL", size: 20, font: fontName })],
       alignment: AlignmentType.CENTER,
     }));
     
     if (!isKarin) {
       children.push(new Paragraph({
-        children: [new TextRun({ text: "Rep. Legal Entidad de Asesoria Previsional Asesoriapensiones.cl SPA", size: 18, font: "Arial" })],
+        children: [new TextRun({ text: "Rep. Legal Entidad de Asesoria Previsional Asesoriapensiones.cl SPA", size: 18, font: fontName })],
         alignment: AlignmentType.CENTER,
         spacing: { after: 1200 }
       }));
@@ -255,17 +276,17 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
     }
 
     children.push(new Paragraph({
-      children: [new TextRun({ text: "Acuso recibo de Informe:", size: 22, font: "Arial" })],
+      children: [new TextRun({ text: "Acuso recibo de Informe:", size: 22, font: fontName })],
       alignment: AlignmentType.LEFT,
       spacing: { after: 600 }
     }));
     children.push(new Paragraph({
-      children: [new TextRun({ text: "Firma:_____________________", size: 22, font: "Arial" })],
+      children: [new TextRun({ text: "Firma:_____________________", size: 22, font: fontName })],
       alignment: AlignmentType.LEFT,
       spacing: { after: 600 }
     }));
     children.push(new Paragraph({
-      children: [new TextRun({ text: "Rut:_______________________", size: 22, font: "Arial" })],
+      children: [new TextRun({ text: "Rut:_______________________", size: 22, font: fontName })],
       alignment: AlignmentType.LEFT,
     }));
   }
@@ -296,8 +317,8 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
         {
           id: "Normal",
           name: "Normal",
-          run: { font: "Arial", size: 22 },
-          paragraph: { spacing: { line: 276, before: 0, after: 120 } }
+          run: { font: fontName, size: 22 },
+          paragraph: { spacing: { line: lineSpacing, before: 0, after: 120 } }
         },
         {
           id: "Heading2",
@@ -305,9 +326,9 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
           basedOn: "Normal",
           next: "Normal",
           quickFormat: true,
-          run: { size: 28, bold: true, color: "000000", font: "Arial" },
+          run: { size: 28, bold: true, color: "000000", font: fontName },
           paragraph: { 
-            spacing: { before: 400, after: 200 }
+            spacing: { line: lineSpacing, before: 240, after: 120 }
           }
         },
         {
@@ -316,8 +337,8 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
           basedOn: "Normal",
           next: "Normal",
           quickFormat: true,
-          run: { size: 24, bold: true, color: "000000", font: "Arial" },
-          paragraph: { spacing: { before: 300, after: 150 } }
+          run: { size: 24, bold: true, color: "000000", font: fontName },
+          paragraph: { spacing: { line: lineSpacing, before: 200, after: 100 } }
         }
       ]
     },

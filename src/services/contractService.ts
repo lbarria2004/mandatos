@@ -19,7 +19,7 @@ IV. Analizar y verificar la situación previsional tanto del pensionable como de
 
 ${isKarin 
   ? `CUARTO: Pólizas Comprometidas: el Asesor tiene contratada una Póliza de Responsabilidad Civil Profesional Nº 9148171 con SEGUROS GENERALES SURAMERICANA S.A., emitida el 27/09/2025., vigencia desde 01/10/2025 hasta el 30/09/2026.`
-  : `CUARTO: Pólizas Comprometidas: La Entidad de Asesoria Previsional Asesoriapensiones.cl Spa, tiene contratada una Póliza de Responsabilidad Civil Profesional Nº 9279324 con SEGUROS GENERALES SURAMERICANA S.A., emitida el 30/10/2025., vigencia desde 01/10/2025 hasta el 30/09/2026.`
+  : `CUARTO: Pólizas Comprometidas: La Entidad de Asesoria Previsional Asesoriapensiones.cl Spa, tiene contratada una Póliza de Responsabilidad Civil Profesional Nº 9148477 con SEGUROS GENERALES SURAMERICANA S.A., emitida el 11/09/2026., vigencia desde 01/10/2026 hasta el 30/09/2027.`
 }
 
 QUINTO: Vigencia: El presente contrato tendrá vigencia durante el período que dure el trámite de pensión y se extenderá hasta que el contratante Selecciones su Modalidad de Pensión, o desista de pensionarse.
@@ -52,15 +52,16 @@ const PROMPT_CONTRATO = `
 Eres un experto legal y previsional chileno. Tu tarea es redactar las partes VARIABLES de un "Contrato de Prestación de Servicios de Asesoría Previsional".
 
 REGLAS:
-1. **RELLENO DE DATOS:** Rellena el ENCABEZADO y la cláusula PRIMERO con la información proporcionada. **IMPORTANTE: Todos los datos extraídos del formulario (nombres, RUTs, fechas, direcciones, estados civiles, etc.) DEBEN aparecer en NEGRITA (ej: **Juan Pérez**, **12.345.678-9**).**
-2. **FORMATO DE FECHAS:** Todas las fechas DEBEN estar en formato dd/mm/aaaa.
-3. **DATOS DEL ASESOR:** 
-   - Si el mandatario es KARIN PABLINA OROSTICA SANTELICES, usa sus datos (RUT: 15.126.775-0, Domicilio: AV. SAN MARTIN 924 OF 311, TEMUCO).
-   - De lo contrario, usa siempre los datos de LUIS MAURICIO BARRÍA CHODIL.
+1. **RELLENO DE DATOS EN NEGRITA:** Rellena el ENCABEZADO, la cláusula PRIMERO y las FIRMAS con la información proporcionada. **IMPORTANTE: ABSOLUTAMENTE TODOS los datos que se agregan al contrato (nombres, RUTs, fechas, direcciones, comunas, ciudades, teléfonos, correos, AFP, sistema de salud, estado civil, profesión, tipo de pensión y datos de beneficiarios) DEBEN ir en NEGRITA usando doble asterisco (ej: **Juan Pérez**, **12.345.678-9**). No dejes ningún dato agregado sin negrita.**
+2. **FORMATO DE FECHAS:** Todas las fechas DEBEN estar en formato dd/mm/aaaa y en **negrita**.
+3. **DATOS DEL ASESOR (TAMBIÉN EN NEGRITA):** 
+   - Si el mandatario es KARIN PABLINA OROSTICA SANTELICES, usa sus datos en negrita (Nombre: **KARIN PABLINA OROSTICA SANTELICES**, RUT: **15.126.775-0**, Domicilio: **AV. SAN MARTIN 924 OF 311**, Ciudad/Comuna: **TEMUCO**, Celular: **991613526**, Email: **karinorostica.pensiones@gmail.com**).
+   - De lo contrario, usa siempre los datos de LUIS MAURICIO BARRÍA CHODIL en negrita (Nombre: **LUIS MAURICIO BARRÍA CHODIL**, RUT: **9.319.028-9**, Domicilio: **AV. SAN MARTIN 924 OF 311**, Ciudad/Comuna: **TEMUCO**, Celular: **951698189**, Email: **luisbarria.pensiones@gmail.com**).
 4. **BENEFICIARIOS:** En la cláusula PRIMERO, genera la descripción de los beneficiarios y, a continuación, genera una TABLA con los siguientes encabezados exactos: Nombre, Rut, F. Nac., Parentesco, Sexo, Inv.
-   - En la columna "Inv", escribe "Si" si el beneficiario es inválido (isInvalid: true) y "No" si no lo es.
+   - Todos los datos de cada beneficiario dentro de la tabla DEBEN ir en **negrita**.
+   - En la columna "Inv", escribe "**Si**" si el beneficiario es inválido (isInvalid: true) y "**No**" si no lo es.
    - Si no hay beneficiarios, pon: "El consultante declara no contar con beneficiarios legales de pensión".
-5. **CAMPOS FALTANTES:** Si faltan datos, deja el espacio en blanco subrayado (ej: __________).
+5. **CAMPOS FALTANTES:** Si faltan datos, deja el espacio en blanco subrayado en negrita (ej: **__________**).
 6. **SALIDA:** Devuelve el contrato estructurado así:
    - El texto del ENCABEZADO directamente (NO escribas la palabra "ENCABEZADO").
    - PRIMERO: (Descripción y Tabla de Beneficiarios)
@@ -69,16 +70,16 @@ REGLAS:
 
 ---
 PLANTILLA ENCABEZADO (VEJEZ/INVALIDEZ):
-En TEMUCO, a {{FECHA}} suscriben el presente contrato, por una parte {{NOMBRE AFILIADO}} RUT: {{RUT AFILIADO}}, estado civil: {{ESTADO CIVIL AFILIADO}}, Fecha de Nacimiento: {{FECHA DE NACIMIENTO AFILIADO}}, profesión u oficio: {{OFICIO AFILIADO}}, Domiciliados en: {{DIRECCIÓN}}, Ciudad: {{CIUDAD}}, Comuna: {{COMUNA}} Celular N° {{CELULAR}} Correo electrónico: {{CORREO ELECTRÓNICO}}; AFP {{AFP DE ORIGEN}} , Sistema de Salud: {{SISTEMA DE SALUD}} en adelante el "Consultante" y por la otra {{NOMBRE ASESOR}} de Profesión u oficio ASESOR PREVISIONAL, nacido el {{FECHA NACIMIENTO ASESOR}}, domiciliado en AV. SAN MARTIN 924 OF 311, Ciudad, TEMUCO, Comuna, TEMUCO, Celular: {{CELULAR ASESOR}}. e-mail: {{EMAIL ASESOR}},. {{ENTIDAD_INFO}} han suscrito el siguiente Contrato de Prestación de Servicios de Asesoría Previsional para tramitar Pensión de {{TIPO DE PENSIÓN}}.
+En **TEMUCO**, a **{{FECHA}}** suscriben el presente contrato, por una parte **{{NOMBRE AFILIADO}}** RUT: **{{RUT AFILIADO}}**, estado civil: **{{ESTADO CIVIL AFILIADO}}**, Fecha de Nacimiento: **{{FECHA DE NACIMIENTO AFILIADO}}**, profesión u oficio: **{{OFICIO AFILIADO}}**, Domiciliados en: **{{DIRECCIÓN}}**, Ciudad: **{{CIUDAD}}**, Comuna: **{{COMUNA}}** Celular N° **{{CELULAR}}** Correo electrónico: **{{CORREO ELECTRÓNICO}}**; AFP **{{AFP DE ORIGEN}}** , Sistema de Salud: **{{SISTEMA DE SALUD}}** en adelante el "Consultante" y por la otra **{{NOMBRE ASESOR}}** de Profesión u oficio ASESOR PREVISIONAL, nacido el **{{FECHA NACIMIENTO ASESOR}}**, domiciliado en **AV. SAN MARTIN 924 OF 311**, Ciudad, **TEMUCO**, Comuna, **TEMUCO**, Celular: **{{CELULAR ASESOR}}**. e-mail: **{{EMAIL ASESOR}}**,. {{ENTIDAD_INFO}} han suscrito el siguiente Contrato de Prestación de Servicios de Asesoría Previsional para tramitar Pensión de **{{TIPO DE PENSIÓN}}**.
 
 ---
 PLANTILLA ENCABEZADO (SOBREVIVENCIA):
-En TEMUCO, a {{FECHA}} suscriben el presente contrato, por una parte {{NOMBRE CONSULTANTE}}, RUT {{RUT CONSULTANTE}}, estado civil: {{ESTADO CIVIL CONSULTANTE}}, Nacida el {{FECHA DE NACIMIENTO CONSULTANTE}}, profesión u oficio: {{PROFESIÓN CONSULTANTE}}, Madre de hijos con derecho a pensión.,Beneficiaria de Pensión de sobrevivencia de {{NOMBRE CAUSANTE}}, RUT {{RUT CAUSANTE}}, Causante, Afiliado a AFP {{AFP DE ORIGEN}} y por la otra.,{{NOMBRE ASESOR}} de Profesión u oficio ASESOR PREVISIONAL, nacido el {{FECHA NACIMIENTO ASESOR}}, domiciliado en AV. SAN MARTIN 924 OF 311, Ciudad, TEMUCO, Comuna, TEMUCO, Celular: {{CELULAR ASESOR}}. e-mail: {{EMAIL ASESOR}},. {{ENTIDAD_INFO}} han suscrito el siguiente Contrato de Prestación de Servicios de Asesoría Previsional para tramitar Pensión de {{TIPO DE PENSIÓN}}.
+En **TEMUCO**, a **{{FECHA}}** suscriben el presente contrato, por una parte **{{NOMBRE CONSULTANTE}}**, RUT **{{RUT CONSULTANTE}}**, estado civil: **{{ESTADO CIVIL CONSULTANTE}}**, Nacida el **{{FECHA DE NACIMIENTO CONSULTANTE}}**, profesión u oficio: **{{PROFESIÓN CONSULTANTE}}**, Madre de hijos con derecho a pensión.,Beneficiaria de Pensión de sobrevivencia de **{{NOMBRE CAUSANTE}}**, RUT **{{RUT CAUSANTE}}**, Causante, Afiliado a AFP **{{AFP DE ORIGEN}}** y por la otra.,**{{NOMBRE ASESOR}}** de Profesión u oficio ASESOR PREVISIONAL, nacido el **{{FECHA NACIMIENTO ASESOR}}**, domiciliado en **AV. SAN MARTIN 924 OF 311**, Ciudad, **TEMUCO**, Comuna, **TEMUCO**, Celular: **{{CELULAR ASESOR}}**. e-mail: **{{EMAIL ASESOR}}**,. {{ENTIDAD_INFO}} han suscrito el siguiente Contrato de Prestación de Servicios de Asesoría Previsional para tramitar Pensión de **{{TIPO DE PENSIÓN}}**.
 
 ---
 FIRMAS:
-| {{NOMBRE ASESOR}} | {{NOMBRE AFILIADO/CONSULTANTE}} |
-| {{RUT ASESOR}} | RUT: {{RUT AFILIADO/CONSULTANTE}} |
+| **{{NOMBRE ASESOR}}** | **{{NOMBRE AFILIADO/CONSULTANTE}}** |
+| **{{RUT ASESOR}}** | RUT: **{{RUT AFILIADO/CONSULTANTE}}** |
 | ASESOR PREVISIONAL | CONSULTANTE |
 | {{FIRMA_ENTIDAD}} | |
 `;
@@ -93,7 +94,7 @@ export async function generateContract(data: any): Promise<string> {
 
   const entidadInfo = isKarin 
     ? `inscrito en el Registro de Asesores Previsionales con el N° **${registrationNumber}** de la Superintendencia de Pensiones, mismo domicilio, en adelante "El Asesor Previsional",`
-    : `Rep. Legal de ENTIDAD DE ASESORIA PREVISIONAL ASESORIAPENSIONES.CL SPA RUT: 78.263.233-7 inscrito en el Registro de Asesores Previsionales con el N° **${registrationNumber}** de la Superintendencia de Pensiones, mismo domicilio, en adelante "La Entidad de Asesoría Previsional",`;
+    : `Rep. Legal de **ENTIDAD DE ASESORIA PREVISIONAL ASESORIAPENSIONES.CL SPA** RUT: **78.263.233-7** inscrito en el Registro de Asesores Previsionales con el N° **${registrationNumber}** de la Superintendencia de Pensiones, mismo domicilio, en adelante "La Entidad de Asesoría Previsional",`;
 
   const firmaEntidad = isKarin ? "" : "Rep. Legal Entidad de Asesoria Previsional Asesoriapensiones.cl SPA";
 
@@ -119,6 +120,7 @@ export async function generateContract(data: any): Promise<string> {
   });
 
   let contractText = response.text || "";
+  contractText = contractText.replace(/\*{3,}/g, "**");
   
   // Replace the placeholder with the actual legal clauses
   contractText = contractText.replace("[CLAUSULAS_LEGALES_ESTANDAR]", getClausulasLegales(isKarin));
