@@ -544,7 +544,7 @@ export default function MandatePreview({ data }: Props) {
     autoTable(doc, {
       startY: currentY,
       head: [['AUTORIZACIONES:', 'Si', 'No']],
-      body: Object.entries(powerLabels).map(([key, label]) => [
+      body: Object.entries(powerLabels).filter(([key]) => data.pensionType === 'INVALIDEZ' || (key !== 'invalidityQualification' && key !== 'medicalBackground')).map(([key, label]) => [
         label,
         (data.powers as any)[key] ? 'X' : '',
         !(data.powers as any)[key] ? 'X' : ''
@@ -923,7 +923,7 @@ export default function MandatePreview({ data }: Props) {
 
       docChildren.push(createTable(
         ['AUTORIZACIONES:', 'Si', 'No'],
-        Object.entries(POWER_LABELS).map(([key, label]) => [label, (data.powers as any)[key] ? 'X' : '', !(data.powers as any)[key] ? 'X' : '']),
+        Object.entries(POWER_LABELS).filter(([key]) => data.pensionType === 'INVALIDEZ' || (key !== 'invalidityQualification' && key !== 'medicalBackground')).map(([key, label]) => [label, (data.powers as any)[key] ? 'X' : '', !(data.powers as any)[key] ? 'X' : '']),
         [80, 10, 10]
       ));
 
