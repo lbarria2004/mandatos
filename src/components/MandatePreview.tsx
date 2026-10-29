@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MandateData, Beneficiary } from '../types';
 import { formatDate } from '../utils/dateUtils';
-import { MANDATE_TEMPLATE, SURVIVORSHIP_MANDATE_TEMPLATE, POWER_LABELS, BACKGROUND_LABELS, SURVIVORSHIP_BACKGROUND_LABELS, SURVIVORSHIP_POWER_LABELS } from '../constants';
+import { MANDATE_TEMPLATE, SURVIVORSHIP_MANDATE_TEMPLATE, POWER_LABELS, BACKGROUND_LABELS, INVALIDITY_BACKGROUND_LABELS, SURVIVORSHIP_BACKGROUND_LABELS, SURVIVORSHIP_POWER_LABELS } from '../constants';
 import { FileText, Download, FileCode, FileSignature, Loader2 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -484,7 +484,7 @@ export default function MandatePreview({ data }: Props) {
     currentY += (splitAfterBen.length * 5) + 5;
 
     // Background Table
-    const backgroundLabels = BACKGROUND_LABELS;
+    const backgroundLabels = data.pensionType === 'INVALIDEZ' ? INVALIDITY_BACKGROUND_LABELS : BACKGROUND_LABELS;
     const backgroundBody: any[] = [];
 
     Object.entries(backgroundLabels).forEach(([key, label]) => {
@@ -900,7 +900,7 @@ export default function MandatePreview({ data }: Props) {
 
       docChildren.push(createTable(
         ['ANTECEDENTES:', 'Si', 'No'],
-        Object.entries(BACKGROUND_LABELS).map(([key, label]) => [label, (data.background as any)[key] ? 'X' : '', !(data.background as any)[key] ? 'X' : '']),
+        Object.entries(data.pensionType === 'INVALIDEZ' ? INVALIDITY_BACKGROUND_LABELS : BACKGROUND_LABELS).map(([key, label]) => [label, (data.background as any)[key] ? 'X' : '', !(data.background as any)[key] ? 'X' : '']),
         [80, 10, 10]
       ));
 

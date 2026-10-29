@@ -1,6 +1,6 @@
 import React from 'react';
 import { MandateData, Mandator, Mandatory, MandatePowers, Background, Beneficiary } from '../types';
-import { CHILEAN_AFPS, POWER_LABELS, BACKGROUND_LABELS, SURVIVORSHIP_BACKGROUND_LABELS, SURVIVORSHIP_POWER_LABELS, HEALTH_INSTITUTIONS, PREDEFINED_ADVISORS } from '../constants';
+import { CHILEAN_AFPS, POWER_LABELS, BACKGROUND_LABELS, INVALIDITY_BACKGROUND_LABELS, SURVIVORSHIP_BACKGROUND_LABELS, SURVIVORSHIP_POWER_LABELS, HEALTH_INSTITUTIONS, PREDEFINED_ADVISORS } from '../constants';
 import { User, Briefcase, ShieldCheck, MapPin, Phone, Mail, Hash, Calendar, Heart, Plus, Trash2, Info, UserCheck, Calculator } from 'lucide-react';
 import { formatRut, calculateDV, validateRut, cleanRut } from '../utils/rutUtils';
 
@@ -603,7 +603,7 @@ export default function MandateForm({ data, onChange }: Props) {
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
         <SectionTitle icon={Info} title="Antecedentes" />
         <div className="space-y-4">
-          {Object.entries(data.pensionType === 'SOBREVIVENCIA' ? SURVIVORSHIP_BACKGROUND_LABELS : BACKGROUND_LABELS).map(([key, label]) => {
+          {Object.entries(data.pensionType === 'SOBREVIVENCIA' ? SURVIVORSHIP_BACKGROUND_LABELS : data.pensionType === 'INVALIDEZ' ? INVALIDITY_BACKGROUND_LABELS : BACKGROUND_LABELS).map(([key, label]) => {
             if (key.endsWith('_header')) {
               return (
                 <h3 key={key} className="text-xs font-black text-indigo-900 uppercase tracking-widest pt-4 border-b border-indigo-50 pb-1">

@@ -101,6 +101,25 @@ export const BACKGROUND_LABELS: Record<string, string> = {
   publicInformationList: "Deseo que mis datos personales (nombre, Rut, dirección, saldo cuenta capitalización individual, bono de reconocimiento) y los datos de mis beneficiarios de pensión, aparezcan en un LISTADO PÚBLICO DE INFORMACIÓN."
 };
 
+export const INVALIDITY_BACKGROUND_LABELS: Record<string, string> = {
+  preliminaryPension: "Deseo pensión preliminar",
+  apsRequest: "Solicito aporte previsional solidario de invalidez (APSI)",
+  oldSystemPension: "Recibo pensión antiguo sistema",
+  invalidityPensionThisSystem: "Recibo pensión invalidez de este Sistema",
+  minimumPensionAdjustment: "Si usted fuere calificado como invalido parcial transitorio, desea que el monto de su pensión se ajuste al monto de la Pensión Básica Solidaria de Invalidez, si resulta inferior a ella",
+  basicSolidaryPensionAdjustment: "Si usted fuere calificado como inválido total mediante un único dictamen, desea que el monto de su pensión se ajuste a dos Unidades de Fomento, si resulta inferior a esta cifra",
+  statuteAffected: "Estoy afecto al Estatuto Administrativo (Ley 18.834) o Leyes números 18.883, 19,070, 19,378 o artículo 332 número 6 del Código Orgánico de Tribunales, respecto de los cuales la obtención de pensión implica la cesación en el cargo.",
+  apvFinancing: "Destinaré Ahorro Previsional Voluntario al financiamiento de mi pensión.",
+  apvcFinancing: "Destinaré Ahorro Previsional Voluntario Colectivo al financiamiento de mi pensión.",
+  cavFinancing: "Traspasará fondos desde mi Cuenta de Ahorro Voluntario para el financiamiento de mi pensión",
+  agreedDeposits: "Poseo depósitos convenidos",
+  unemploymentInsuranceFinancing: "Traspasará fondos desde mi Cuenta Individual de Cesantía",
+  foreignContributions: "Tengo cotizaciones en otro país",
+  foreignResidence: "Tengo períodos de residencia en otro país",
+  fundTypeChange: "Deseo cambiar de Tipo de Fondo",
+  publicInformationList: "Deseo que mis datos personales (nombre, Rut, dirección, saldo cuenta capitalización individual, bono de reconocimiento) y los datos de mis beneficiarios de pensión, aparezcan en un LISTADO PÚBLICO DE INFORMACIÓN."
+};
+
 export const SURVIVORSHIP_BACKGROUND_LABELS: Record<string, string> = {
   situacion_header: "Situación en que se encontraba el afiliado:",
   laborSituation_DEPENDENT: "Trabajador dependiente que se encontraba prestando servicios",
