@@ -53,10 +53,10 @@ Eres un experto legal y previsional chileno. Tu tarea es redactar las partes VAR
 
 REGLAS:
 1. **RELLENO DE DATOS EN NEGRITA:** Rellena el ENCABEZADO, la cláusula PRIMERO y las FIRMAS con la información proporcionada. **IMPORTANTE: ABSOLUTAMENTE TODOS los datos que se agregan al contrato (nombres, RUTs, fechas, direcciones, comunas, ciudades, teléfonos, correos, AFP, sistema de salud, estado civil, profesión, tipo de pensión y datos de beneficiarios) DEBEN ir en NEGRITA usando doble asterisco (ej: **Juan Pérez**, **12.345.678-9**). No dejes ningún dato agregado sin negrita.**
-2. **FORMATO DE FECHAS:** Todas las fechas DEBEN estar en formato dd/mm/aaaa y en **negrita**.
+2. **FORMATO DE FECHAS:** Todas las fechas DEBEN estar en formato dd/mm/aaaa y en **negrita** (excepto la fecha de nacimiento del asesor Luis Mauricio Barría Chodil, que debe decir **23 de junio de 1979**).
 3. **DATOS DEL ASESOR (TAMBIÉN EN NEGRITA):** 
    - Si el mandatario es KARIN PABLINA OROSTICA SANTELICES, usa sus datos en negrita (Nombre: **KARIN PABLINA OROSTICA SANTELICES**, RUT: **15.126.775-0**, Domicilio: **AV. SAN MARTIN 924 OF 311**, Ciudad/Comuna: **TEMUCO**, Celular: **991613526**, Email: **karinorostica.pensiones@gmail.com**).
-   - De lo contrario, usa siempre los datos de LUIS MAURICIO BARRÍA CHODIL en negrita (Nombre: **LUIS MAURICIO BARRÍA CHODIL**, RUT: **9.319.028-9**, Domicilio: **AV. SAN MARTIN 924 OF 311**, Ciudad/Comuna: **TEMUCO**, Celular: **951698189**, Email: **luisbarria.pensiones@gmail.com**).
+   - De lo contrario, usa siempre los datos de LUIS MAURICIO BARRÍA CHODIL en negrita (Nombre: **LUIS MAURICIO BARRÍA CHODIL**, Fecha de Nacimiento: **23 de junio de 1979**, RUT: **9.319.028-9**, Domicilio: **AV. SAN MARTIN 924 OF 311**, Ciudad/Comuna: **TEMUCO**, Celular: **951698189**, Email: **luisbarria.pensiones@gmail.com**).
 4. **BENEFICIARIOS:** En la cláusula PRIMERO, genera la descripción de los beneficiarios y, a continuación, genera una TABLA con los siguientes encabezados exactos: Nombre, Rut, F. Nac., Parentesco, Sexo, Inv.
    - Todos los datos de cada beneficiario dentro de la tabla DEBEN ir en **negrita**.
    - En la columna "Inv", escribe "**Si**" si el beneficiario es inválido (isInvalid: true) y "**No**" si no lo es.
@@ -100,7 +100,8 @@ export async function generateContract(data: any): Promise<string> {
 
   const systemInstruction = PROMPT_CONTRATO
     .replace(/{{ENTIDAD_INFO}}/g, entidadInfo)
-    .replace(/{{FIRMA_ENTIDAD}}/g, firmaEntidad);
+    .replace(/{{FIRMA_ENTIDAD}}/g, firmaEntidad)
+    .replace(/{{FECHA NACIMIENTO ASESOR}}/g, isKarin ? "{{FECHA NACIMIENTO ASESOR}}" : "23 de junio de 1979");
 
   const prompt = `
     DATOS PARA EL CONTRATO:

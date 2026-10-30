@@ -22,8 +22,8 @@ const CONTENT_WIDTH_DXA = 9026; // A4 width minus 1 inch margins on both sides
 export async function exportToDocx(markdown: string, clientName: string, type: 'informe' | 'contrato' = 'informe', advisorName?: string) {
   const lines = markdown.split(/\r?\n/);
   const children: any[] = [];
-  const fontName = type === 'contrato' ? "Roboto Medium" : "Arial";
-  const lineSpacing = 276; // 1.15 line spacing (interlineado <= 2)
+  const fontName = type === 'contrato' ? "Roboto" : "Arial";
+  const lineSpacing = 240; // Interlineado simple (1.0)
 
   // Title
   const title = type === 'informe' ? "INFORME TÉCNICO DE ASESORÍA PREVISIONAL" : "CONTRATO DE PRESTACIÓN DE SERVICIOS DE ASESORÍA PREVISIONAL";
@@ -36,7 +36,7 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
       font: fontName
     })],
     alignment: AlignmentType.CENTER,
-    spacing: { before: 120, after: 160, line: lineSpacing }
+    spacing: { before: 0, after: 40, line: lineSpacing }
   }));
 
   if (type === 'informe') {
@@ -141,7 +141,7 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
                   children: [new Paragraph({
                     children: createCellRuns(cell, cellBold, cellFontSize),
                     alignment: (isHeader || isSignatureTable) ? AlignmentType.CENTER : AlignmentType.LEFT,
-                    spacing: { before: 40, after: 40, line: lineSpacing }
+                    spacing: { before: 0, after: 40, line: lineSpacing }
                   })],
                   shading: isHeader ? { 
                     fill: "F2F2F2",
@@ -161,7 +161,7 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
           })
         });
         children.push(table);
-        children.push(new Paragraph({ text: "", spacing: { after: 120, line: lineSpacing } }));
+        children.push(new Paragraph({ text: "", spacing: { before: 0, after: 40, line: lineSpacing } }));
       }
       currentTable = [];
     }
@@ -197,19 +197,19 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
       children.push(new Paragraph({
         text: line.replace("## ", "").replace(/\*/g, ""),
         heading: HeadingLevel.HEADING_2,
-        spacing: { before: 240, after: 120, line: lineSpacing }
+        spacing: { before: 0, after: 40, line: lineSpacing }
       }));
     } else if (line.startsWith("### ")) {
       children.push(new Paragraph({
         text: line.replace("### ", "").replace(/\*/g, ""),
         heading: HeadingLevel.HEADING_3,
-        spacing: { before: 200, after: 100, line: lineSpacing }
+        spacing: { before: 0, after: 40, line: lineSpacing }
       }));
     } else if (line.startsWith("#### ")) {
       children.push(new Paragraph({
         text: line.replace("#### ", "").replace(/\*/g, ""),
         heading: HeadingLevel.HEADING_4,
-        spacing: { before: 160, after: 80, line: lineSpacing }
+        spacing: { before: 0, after: 40, line: lineSpacing }
       }));
     } else if (line.match(/^[\*\-]\s+/)) {
       const cleanLine = line.replace(/^[\*\-]\s+/, "");
@@ -227,7 +227,7 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
           reference: "my-bullet-points",
           level: 0,
         },
-        spacing: { after: 80, line: lineSpacing }
+        spacing: { before: 0, after: 40, line: lineSpacing }
       }));
     } else if (line !== "" && !line.startsWith("---")) {
       const parts = line.split("**");
@@ -240,7 +240,7 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
 
       children.push(new Paragraph({
         children: textRuns,
-        spacing: { after: 120, line: lineSpacing },
+        spacing: { before: 0, after: 40, line: lineSpacing },
         alignment: AlignmentType.JUSTIFIED
       }));
     }
@@ -318,7 +318,7 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
           id: "Normal",
           name: "Normal",
           run: { font: fontName, size: 22 },
-          paragraph: { spacing: { line: lineSpacing, before: 0, after: 120 } }
+          paragraph: { spacing: { line: lineSpacing, before: 0, after: 40 } }
         },
         {
           id: "Heading2",
@@ -328,7 +328,7 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
           quickFormat: true,
           run: { size: 28, bold: true, color: "000000", font: fontName },
           paragraph: { 
-            spacing: { line: lineSpacing, before: 240, after: 120 }
+            spacing: { line: lineSpacing, before: 0, after: 40 }
           }
         },
         {
@@ -338,7 +338,7 @@ export async function exportToDocx(markdown: string, clientName: string, type: '
           next: "Normal",
           quickFormat: true,
           run: { size: 24, bold: true, color: "000000", font: fontName },
-          paragraph: { spacing: { line: lineSpacing, before: 200, after: 100 } }
+          paragraph: { spacing: { line: lineSpacing, before: 0, after: 40 } }
         }
       ]
     },

@@ -154,6 +154,7 @@ export const PREDEFINED_ADVISORS = [
     fullName: "Luis Mauricio Barria Chodil",
     rut: "9.319.028-9",
     nationality: "Chileno",
+    birthDate: "23 de junio de 1979",
     address: "Av. San Martin 924 of 311",
     commune: "Temuco",
     city: "Temuco",
